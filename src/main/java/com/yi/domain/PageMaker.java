@@ -7,7 +7,7 @@ public class PageMaker {
 	private boolean prev; // 이전여부
 	private boolean next; //이후여부
 	
-	private int displayPageNum; //보여지는페이지번호수
+	private int displayPageNum = 10; //보여지는페이지번호수
 	private Criteria cri;
 	
 	private void calculatorData() {

@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.yi.domain.BoardVO;
 import com.yi.domain.Criteria;
+import com.yi.domain.PageMaker;
 import com.yi.service.BoardService;
 
 @Controller
@@ -74,7 +75,14 @@ public class BoardController {
 	@RequestMapping(value = "/board/listPage", method = RequestMethod.GET)
 	public String listPage(Criteria cri, Model model) throws Exception {
 		List<BoardVO> list = service.listCriteria(cri);
+		
+		PageMaker pageMaker = new PageMaker();
+		pageMaker.setCri(cri);
+		pageMaker.setTotalCount(288); //select count(bno) from tbl_board;
+		System.out.println(pageMaker);
 		model.addAttribute("list", list);
+		model.addAttribute("pageMaker", pageMaker);
+		
 		return "/board/listPage";
 	}
 }

@@ -33,6 +33,11 @@
 						</c:forEach>
 					</table>
 				</div>
+				<div class="box-footer">
+					<c:forEach begin="${pageMaker.startPage }" end="${pageMaker.endPage }" var="idx">
+					${idx },
+					</c:forEach>
+				</div>
 			</div>
 		</div>	
 	</div>
