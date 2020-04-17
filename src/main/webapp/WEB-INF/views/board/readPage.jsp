@@ -6,7 +6,7 @@ $(function () {
 	//수정
 	$("#btnMod").click(function() {
 		var no = $(this).attr("data-no");
-		location.href="${pageContext.request.contextPath}/board/update?bno="+no;
+		location.href="${pageContext.request.contextPath}/board/updatePage?bno="+no+"&page=${cri.page}";
 	})
 	
 	//삭제

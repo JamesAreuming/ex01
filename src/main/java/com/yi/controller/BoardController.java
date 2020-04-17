@@ -72,6 +72,7 @@ public class BoardController {
 	}
 	
 	
+	//페이징처리
 	@RequestMapping(value = "/board/listPage", method = RequestMethod.GET)
 	public String listPage(Criteria cri, Model model) throws Exception {
 		List<BoardVO> list = service.listCriteria(cri);
@@ -79,7 +80,7 @@ public class BoardController {
 		PageMaker pageMaker = new PageMaker();
 		pageMaker.setCri(cri);
 		pageMaker.setTotalCount(service.totalCount()); //select count(bno) from tbl_board;
-		System.out.println(pageMaker);
+		//System.out.println(pageMaker);
 		model.addAttribute("list", list);
 		model.addAttribute("pageMaker", pageMaker);
 		
@@ -99,5 +100,26 @@ public class BoardController {
 	public String deletePage(int bno, Criteria cri, Model model) throws Exception{
 		service.delete(bno);
 		return "redirect:/board/listPage?page="+cri.getPage();
+	}
+	
+	//수정- 수정화면 보여주고
+	@RequestMapping(value = "/board/updatePage", method = RequestMethod.GET)
+	public String updatePageGet(int bno, Criteria cri, Model model) throws Exception{
+		
+		BoardVO vo = service.readByNo(bno);
+		model.addAttribute("board", vo);
+		model.addAttribute("cri", cri);
+		
+		return "/board/modifyPage";
+	}
+	
+	//수정 - 리스트로 가기
+	@RequestMapping(value = "/board/updatePage", method = RequestMethod.POST)
+	public String updatePagePost(BoardVO vo,Criteria cri) throws Exception{
+		//System.out.println(vo);
+		service.update(vo);
+		System.out.println(vo.getBno());
+		System.out.println(cri.getPage());
+		return  "redirect:/board/listPage?page="+cri.getPage();
 	}	
 }
