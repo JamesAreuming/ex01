@@ -28,7 +28,7 @@ public class BoardController {
 	public String registerPost(BoardVO vo) throws Exception {
 		//System.out.println("regiser POST----------------" + vo); //컨트럴로에 잘 넘어옴
 		service.create(vo);
-		return "redirect:/board/list";
+		return "redirect:/board/listPage";
 	}
 	
 	@RequestMapping(value = "/board/list", method = RequestMethod.GET)
@@ -78,11 +78,26 @@ public class BoardController {
 		
 		PageMaker pageMaker = new PageMaker();
 		pageMaker.setCri(cri);
-		pageMaker.setTotalCount(288); //select count(bno) from tbl_board;
+		pageMaker.setTotalCount(service.totalCount()); //select count(bno) from tbl_board;
 		System.out.println(pageMaker);
 		model.addAttribute("list", list);
 		model.addAttribute("pageMaker", pageMaker);
 		
 		return "/board/listPage";
 	}
+	
+	
+	@RequestMapping(value = "/board/readPage", method = RequestMethod.GET)
+	public String readPage(int bno, Criteria cri, Model model) throws Exception {
+		BoardVO vo = service.readByNo(bno);
+		model.addAttribute("board", vo);
+		model.addAttribute("cri", cri);
+		return "/board/readPage";
+	}
+	
+	@RequestMapping(value = "/board/deletePage", method = RequestMethod.GET)
+	public String deletePage(int bno, Criteria cri, Model model) throws Exception{
+		service.delete(bno);
+		return "redirect:/board/listPage?page="+cri.getPage();
+	}	
 }

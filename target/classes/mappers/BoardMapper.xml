@@ -31,4 +31,8 @@
 	<select id="listCriteria" resultType="BoardVO">
 		select * from tbl_board order by bno desc limit #{pageStart}, #{perPageNum}
 	</select>
+	
+	<select id="totalCount" resultType="int"> <!-- 개수만 넘어가니 int -->
+		select count(bno) from tbl_board;
+	</select>
 </mapper>

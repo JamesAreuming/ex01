@@ -40,4 +40,8 @@ public class BoardService {
 	public List<BoardVO> listCriteria(Criteria cri) throws Exception{
 		return dao.listCriteria(cri);
 	}
+	
+	public int totalCount() throws Exception {
+		return dao.totalCount();
+	}
 }
