@@ -35,4 +35,78 @@
 	<select id="totalCount" resultType="int"> <!-- 개수만 넘어가니 int -->
 		select count(bno) from tbl_board;
 	</select>
+	
+	<sql id="search">
+			<if test="searchType=='t'.toString()">
+				where title like CONCAT('%','${keyword}','%')
+			</if>
+			<if test="searchType=='c'.toString()">
+				where content like CONCAT('%','${keyword}','%')
+			</if>
+			<if test="searchType=='w'.toString()">
+				where writer like CONCAT('%','${keyword}','%')
+			</if>
+			<if test="searchType=='tc'.toString()">
+				where title like CONCAT('%','${keyword}','%') OR content like CONCAT('%','${keyword}','%')
+			</if>
+			<if test="searchType=='cw'.toString()">
+				where content like CONCAT('%','${keyword}','%') OR writer like CONCAT('%','${keyword}','%')
+			</if>
+			<if test="searchType=='tcw'.toString()">
+				where title like CONCAT('%','${keyword}','%') OR content like CONCAT('%','${keyword}','%') OR writer like CONCAT('%','${keyword}','%')
+			</if>	
+	</sql>
+	
+	<select id="listSearchCriteria" resultType="BoardVO">
+		select * from tbl_board
+			<include refid="search"/>								
+			order by bno desc limit #{pageStart}, #{perPageNum}
+	</select>
+	
+	<select id="totalSearchCount" resultType="int"> <!-- 개수만 넘어가니 int -->
+		select count(bno) from tbl_board
+			<include refid="search"/>	
+	</select>
+	
+	<update id="updateReplyCnt">
+		update tbl_board set replycnt  = replycnt + #{amount} where bno = #{bno}
+	</update>
+	
+	<update id="updateViewCnt">
+		update tbl_board set viewcnt = viewcnt+1 where bno = #{bno}  
+	</update>
+	
+	<insert id="addAttach">
+		insert into tbl_attach (fullName, bno) values (#{fullname}, LAST_INSERT_ID())
+	</insert>
+	
+	<insert id="modAttach">
+		insert into tbl_attach (fullName, bno) values (#{fullname}, #{bno})
+	</insert>
+		
+	<!-- JOIN -->
+	<resultMap type="BoardVO" id="BoardResult">
+		<id property="bno" column="bno"/>
+		<result property="title" column="title"/>
+		<result property="content" column="content"/>
+		<result property="writer" column="writer"/>
+		<result property="regdate" column="regdate"/>
+		<result property="viewcnt" column="viewcnt"/>
+		<result property="replycnt" column="replycnt"/>
+		<collection property="files" ofType="java.lang.String" javaType="list"> <!-- 여러번 들어가는 경우만 collection -->
+			<result column="fullName"/>
+		</collection>
+	</resultMap>
+	
+	<select id="readAndAttachByBno" resultMap="BoardResult">
+		select * from tbl_board tb left join tbl_attach ta on tb.bno = ta.bno where tb.bno = #{bno}
+	</select>
+	
+  	<delete id="removeImg">
+		delete from tbl_attach where fullName = #{fullname}
+	</delete>
+	
+	<delete id="deleteAttach">
+		delete from tbl_attach where bno= #{bno}
+	</delete>	
 </mapper>
